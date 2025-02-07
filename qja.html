@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scratch to Reveal Card</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 1rem;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-pink-200 to-red-300 min-h-screen flex items-center justify-center">
+  <div class="w-96 p-6 bg-white rounded-2xl shadow-lg relative">
+    <h1 class="text-red-500 text-3xl font-bold mb-2 text-center">Scratch to Reveal!</h1>
+    <p class="text-gray-600 text-sm text-center mb-4">Scratch the card to reveal the hidden surprise!</p>
+
+    <div class="relative overflow-hidden rounded-2xl">
+      <img id="hiddenImage" class="rounded-2xl w-full" src="https://res.cloudinary.com/dyocebxoe/image/upload/v1738258989/IMG_20240831_151425_kqa7tu.jpg" alt="Hidden Image">
+      <canvas id="scratchCanvas" class="absolute inset-0"></canvas>
+    </div>
+
+    <p class="text-center mt-4 text-gray-700">Happy Valentine's Day! ❤️ <br> Love, Regina</p>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('scratchCanvas');
+    const hiddenImage = document.getElementById('hiddenImage');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = hiddenImage.width;
+    canvas.height = hiddenImage.height;
+
+    // Fill the canvas with a gray overlay
+    ctx.fillStyle = '#c4c4c4';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    let isScratching = false;
+
+    canvas.addEventListener('mousedown', () => isScratching = true);
+    canvas.addEventListener('mouseup', () => isScratching = false);
+    canvas.addEventListener('mousemove', scratch);
+    canvas.addEventListener('touchstart', () => isScratching = true);
+    canvas.addEventListener('touchend', () => isScratching = false);
+    canvas.addEventListener('touchmove', scratch);
+
+    function scratch(e) {
+      if (!isScratching) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+      const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 20, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  </script>
+</body>
+</html>
